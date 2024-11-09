@@ -1,11 +1,12 @@
 package main
 
 import (
-	"log"
+	"go_bitcoin_node_metrics/internal/client"
+	"go_bitcoin_node_metrics/internal/logger"
+	"go_bitcoin_node_metrics/internal/networking"
+	"go_bitcoin_node_metrics/internal/service"
 	"net/http"
 	"time"
-
-	"internal/networking"
 )
 
 const (
@@ -17,7 +18,10 @@ var (
 )
 
 func init() {
-	handler = networking.BuildHTTPHandler()
+	logger := logger.BuildLogger()
+	client := client.BuildClient(logger)
+	service := service.BuildService(client, logger)
+	handler = networking.BuildHTTPHandler(service, logger)
 }
 
 func main() {
@@ -27,5 +31,5 @@ func main() {
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	log.Fatal(srv.ListenAndServe())
+	srv.ListenAndServe()
 }

@@ -8,7 +8,7 @@ clean:
 
 test: clean
 	@echo "*** Testing the project... ***"
-	go test internal/networking
+	go test ./internal/networking
 
 build: test
 	@echo "*** Building the project.. ***"
