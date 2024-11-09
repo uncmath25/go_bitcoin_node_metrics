@@ -7,7 +7,7 @@ import (
 
 type Service interface {
 	GetTestMessage() (string, error)
-	GetNodeSummary() (int, error)
+	BuildNodeSummary() (int, error)
 }
 
 type service struct {
@@ -27,10 +27,10 @@ func (s *service) GetTestMessage() (string, error) {
 	return "Test", nil
 }
 
-func (s *service) GetNodeSummary() (int, error) {
+func (s *service) BuildNodeSummary() (int, error) {
 	blockHeight, err := s.client.GetBlockHeight()
 	if err != nil {
-		panic(err)
+		s.logger.Fatalln("Failed to build node summary:", err)
 	}
 	return blockHeight, nil
 }

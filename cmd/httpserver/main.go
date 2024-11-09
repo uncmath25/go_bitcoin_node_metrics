@@ -7,6 +7,8 @@ import (
 	"go_bitcoin_node_metrics/internal/service"
 	"net/http"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -19,6 +21,10 @@ var (
 
 func init() {
 	logger := logger.BuildLogger()
+	err := godotenv.Load(".env")
+	if err != nil {
+		logger.Fatalln("Error loading .env file")
+	}
 	client := client.BuildClient(logger)
 	service := service.BuildService(client, logger)
 	handler = networking.BuildHTTPHandler(service, logger)

@@ -22,10 +22,10 @@ type testResponse struct {
 
 func buildTestEndpointHandler(service service.Service, logger *log.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger.Println("Processing test request...")
+		defer logger.Println("Processed test request")
 		responseMessage, err := service.GetTestMessage()
 		if err != nil {
-			panic(err)
+			logger.Fatalln("Failed to process test request:", err)
 		}
 		responseData := testResponse{Message: responseMessage}
 		EncodeResponse(w, http.StatusOK, responseData)
@@ -38,10 +38,10 @@ type summaryResponse struct {
 
 func buildSummaryEndpointHandler(service service.Service, logger *log.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger.Println("Processing summary request...")
-		blockHeight, err := service.GetNodeSummary()
+		defer logger.Println("Processed summary request")
+		blockHeight, err := service.BuildNodeSummary()
 		if err != nil {
-			panic(err)
+			logger.Fatalln("Failed to process summary request:", err)
 		}
 		responseData := summaryResponse{BlockHeight: blockHeight}
 		EncodeResponse(w, http.StatusOK, responseData)
