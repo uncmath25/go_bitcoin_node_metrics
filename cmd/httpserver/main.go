@@ -6,14 +6,15 @@ import (
 	"go_bitcoin_node_metrics/internal/networking"
 	"go_bitcoin_node_metrics/internal/service"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/joho/godotenv"
 )
 
-const (
-	url = "localhost:8080"
-)
+// const (
+// 	url = ":8080"
+// )
 
 var (
 	handler http.Handler
@@ -33,9 +34,9 @@ func init() {
 func main() {
 	srv := &http.Server{
 		Handler:      handler,
-		Addr:         url,
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+		Addr:         ":" + os.Getenv("PORT"),
+		WriteTimeout: 5 * time.Second,
+		ReadTimeout:  5 * time.Second,
 	}
 	srv.ListenAndServe()
 }
